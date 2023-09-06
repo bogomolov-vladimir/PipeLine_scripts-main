@@ -1,0 +1,73 @@
+echo "Hello, today is  $(date '+%d/%m/%Y %H:%M:%S'), $(date)"
+echo $(pwd)
+echo "-----------------------------------------------------------"
+#!/bin/bash
+# date-calc.sh
+# Author: Nathan Coulter
+# Used in ABS Guide with permission (thanks!).
+
+MPHR=60    # Minutes per hour.
+HPD=24     # Hours per day.
+
+diff () {
+        printf '%s' $(( $(date -u -d"$TARGET" +%s) -
+                        $(date -u -d"$CURRENT" +%s)))
+#                       %d = day of month.
+}
+
+
+CURRENT=$(date -u -d '2007-09-01 17:30:24' '+%F %T.%N %Z')
+TARGET=$(date -u -d'2007-12-25 12:30:00' '+%F %T.%N %Z')
+# %F = full date, %T = %H:%M:%S, %N = nanoseconds, %Z = time zone.
+
+printf '\nIn 2007, %s ' \
+       "$(date -d"$CURRENT +
+        $(( $(diff) /$MPHR /$MPHR /$HPD / 2 )) days" '+%d %B')" 
+#       %B = name of month                ^ halfway
+printf 'was halfway between %s ' "$(date -d"$CURRENT" '+%d %B')"
+printf 'and %s' "$(date -d"$TARGET" '+%d %B')"
+
+printf 'On %s at %s, there were' \
+        $(date -u -d"$CURRENT" +%F) $(date -u -d"$CURRENT" +%T)
+DAYS=$(( $(diff) / $MPHR / $MPHR / $HPD ))
+CURRENT=$(date -d"$CURRENT +$DAYS days" '+%F %T.%N %Z')
+HOURS=$(( $(diff) / $MPHR / $MPHR ))
+CURRENT=$(date -d"$CURRENT +$HOURS hours" '+%F %T.%N %Z')
+MINUTES=$(( $(diff) / $MPHR ))
+CURRENT=$(date -d"$CURRENT +$MINUTES minutes" '+%F %T.%N %Z')
+printf '%s days, %s hours, ' "$DAYS" "$HOURS"
+printf '%s minutes, and %s seconds ' "$MINUTES" "$(diff)"
+printf 'until Christmas Dinner!'
+
+
+#  Exercise:
+#  --------
+#  Rewrite the diff () function to accept passed parameters,
+#+ rather than using global variables.
+
+echo "-------------------------------------------------------------"
+
+#!/bin/bash
+# Exercising the 'date' command
+
+echo "The number of days since the year's beginning is `date +%j`."
+# Needs a leading '+' to invoke formatting.
+# %j gives day of year.
+
+echo "The number of seconds elapsed since 01/01/1970 is `date +%s`."
+#  %s yields number of seconds since "UNIX epoch" began,
+#+ but how is this useful?
+
+prefix=temp
+suffix=$(date +%s)  # The "+%s" option to 'date' is GNU-specific.
+filename=$prefix.$suffix
+echo "Temporary filename = $filename"
+#  It's great for creating "unique and random" temp filenames,
+#+ even better than using $$.
+
+# Read the 'date' man page for more formatting options.
+
+
+sudo awk -v user="$user" '$5 == "sudo:" { print $6 }' /var/log/auth.log | sort -u
+
+ls /var/lib/jenkins/ ;sudo -S --user vlad_pc grep -ir localhost /var/lib/jenkins/*.xml
